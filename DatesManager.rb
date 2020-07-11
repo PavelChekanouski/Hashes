@@ -2,7 +2,7 @@ class DatesManager
   attr_reader :dates_processor
   attr_accessor :beginning_date, :unit, :duration
 
-  UNITS_PROCESSOR = {
+  UNITS = {
     seconds: 1,
     minutes: 60,
     hours: 60 * 60,
@@ -15,16 +15,13 @@ class DatesManager
     @beginning_date = params.fetch(:beginning_date, Time.now)
     @unit = params.fetch(:unit, :seconds)
     @duration = params.fetch(:duration, 100)
-    
-    @ending_date = @beginning_date + duration*UNITS_PROCESSOR[unit] 
-
     @dates_processor = {
-      seconds: lambda_for_duration(UNITS_PROCESSOR[:seconds]),
-      minutes: lambda_for_duration(UNITS_PROCESSOR[:minutes]),
-      hours: lambda_for_duration(UNITS_PROCESSOR[:hours]),
-      days: lambda_for_duration(UNITS_PROCESSOR[:days]),
-      months: lambda_for_duration(UNITS_PROCESSOR[:months]),
-      years: lambda_for_duration(UNITS_PROCESSOR[:years])
+      seconds: lambda_for_duration(@duration).call,
+      minutes: lambda_for_duration(@duration).call,
+      hours: lambda_for_duration(@duration).call,
+      days: lambda_for_duration(@duration).call,
+      months: lambda_for_duration(@duration).call,
+      years: lambda_for_duration(@duration).call
     }
   end
 
@@ -32,7 +29,7 @@ class DatesManager
     lambda {
       dates = []
       estimated_date = @beginning_date
-      while (@beginning_date..@ending_date).cover?(estimated_date += duration) do
+      while (@beginning_date..(@beginning_date + duration * UNITS[@unit])).cover?(estimated_date += UNITS[:days]) do
         dates << estimated_date
       end
       dates

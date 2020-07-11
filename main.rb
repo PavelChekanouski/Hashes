@@ -1,8 +1,8 @@
 load "HashesManager.rb"
 load "DatesManager.rb"
 
-datesManager = DatesManager.new(beginning_date: Time.now, unit: :days, duration: 10)
-p datesManager.dates_processor[:days].call
+datesManager = DatesManager.new(beginning_date: Time.now, unit: :days, duration: 3)
+p datesManager.dates_processor[:days]
 
 hashesManager = HashesManager.new
 
